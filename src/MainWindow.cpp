@@ -44,4 +44,7 @@ MainWindow::MainWindow(_<MyUpdater> updater)
     } });
 }
 
-int MainWindow::sum(int a, int b) { return a + b; }
+int MainWindow::sum(int a, int b) {
+    auto test = new int;
+    return a + b;
+}
