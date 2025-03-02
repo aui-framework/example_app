@@ -42,6 +42,8 @@ In the `.github/workflows` directory, you can find definitions for the following
   - Performs `clang-tidy` checks (static analysis) and generates nice summary with `.github/tidy-summary.py`.
   - Performs `valgrind` checks on tests (dynamic analysis).
 
+  See [Memleak Demo PR](https://github.com/aui-framework/example_app/pull/3).
+
 
 ## Code Quality and Formatting
 
