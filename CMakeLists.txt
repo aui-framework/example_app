@@ -6,7 +6,7 @@ project(example_app
 
 option(BUILD_SHARED_LIBS "Build shared libs" OFF)
 
-set(AUI_VERSION a98b704e4cda510781ea2d0931c1c7b6e755912c)
+set(AUI_VERSION 228)
 
 # Use AUI.Boot
 file(
