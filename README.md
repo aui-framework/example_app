@@ -51,3 +51,25 @@ The template includes `.clang-format` and `.clang-tidy`, the latter is used for 
 
 To create a release, simply push an update to version in `CMakeLists.txt`. Pipeline will create a GitHub Release Draft
 for you. After release draft is created, perform manual review and submit release.
+
+# Syncing with this template
+
+In some cases, you might want to sync with this template. Generally, you would want to sync with CI/CD stuff
+(`.github`). If such, use some git techniques:
+
+```shell
+# only for the first time
+git remote add template https://github.com/aui-framework/example_app
+
+# syncing
+git fetch template
+git merge template/master --allow-unrelated-histories 
+
+# from now on, check git status and throw out anything you don't need
+
+# remove unwanted files, i.e., SumTest.cpp:
+git rm tests/SumTest.cpp -f
+
+# keep YOURS src, tests, CMakeLists:
+git checkout HEAD -- CMakeLists.txt src tests
+```

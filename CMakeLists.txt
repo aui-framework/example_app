@@ -5,8 +5,9 @@ project(example_app
     )
 
 option(BUILD_SHARED_LIBS "Build shared libs" OFF)
+option(AUIB_FORCE_PRECOMPILED "AUI.Boot: force precompiled dependencies" ON)
 
-set(AUI_VERSION a98b704e4cda510781ea2d0931c1c7b6e755912c)
+set(AUI_VERSION v7.0.0-rc.20)
 
 # Use AUI.Boot
 file(
