@@ -75,3 +75,18 @@ git rm tests/SumTest.cpp -f
 # keep YOURS src, tests, CMakeLists:
 git checkout HEAD -- CMakeLists.txt src tests
 ```
+
+# IDE setup
+
+## CLion
+
+Works out of the box.
+
+## VS Code
+
+1. Install extensions recommended by workspace. You can see them in `.vscode/extensions.json`.
+2. Check and adjust `.vscode/settings.json` if needed.
+3. Hit `F1` & type `CMake: Build`. If it asks for a toolchain, choose "Unspecified".
+4. After build is complete, in the left bar, choose CMake logo. In the tree view, right click on "example_app", choose
+   "Set as Build Target", and also "Set as Debug Target".
+5. `F1` & `CMake: Debug`.
