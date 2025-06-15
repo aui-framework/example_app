@@ -1,0 +1,19 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "com.github.aui.examples"
+include ':app'
+
+include 'aui-bridge'
+project(':aui-bridge').projectDir = file('app/build/aui_gradle/android')
