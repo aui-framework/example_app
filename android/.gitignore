@@ -11,8 +11,10 @@
 bin/
 gen/
 out/
-*build*
+# App Release Files
+app/release/*
 
+#  Uncomment the following line in case you need and you don't have the release build type files in your app
 # release/
 # Gradle files
 .gradle/
@@ -70,20 +72,6 @@ lint/tmp/
 # lint/reports/
 # MacOS
 .DS_Store
-
-# Xcode
-xcuserdata
-DerivedData/
-ExportOptions.plist
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata/
-
+# App Specific cases 
+app/release/output.json
 .idea/codeStyles/
-
