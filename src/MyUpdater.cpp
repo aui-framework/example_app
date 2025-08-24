@@ -15,7 +15,7 @@
 static constexpr auto LOG_TAG = "MyUpdater";
 
 AFuture<void> MyUpdater::checkForUpdatesImpl() {
-    return async {
+    return AUI_THREADPOOL {
         try {
             auto githubLatestRelease = aui::updater::github::latestRelease("aui-framework", "example_app");
             ALogger::info(LOG_TAG) << "Found latest release: " << githubLatestRelease.tag_name;
@@ -71,7 +71,7 @@ AFuture<void> MyUpdater::checkForUpdatesImpl() {
 }
 
 AFuture<void> MyUpdater::downloadUpdateImpl(const APath& unpackedUpdateDir) {
-    return async {
+    return AUI_THREADPOOL {
         try {
             AUI_ASSERTX(!mDownloadUrl.empty(), "make a successful call to checkForUpdates first");
             downloadAndUnpack(mDownloadUrl, unpackedUpdateDir);
