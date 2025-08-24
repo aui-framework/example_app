@@ -11,7 +11,7 @@ using namespace declarative;
 MainWindow::MainWindow(_<MyUpdater> updater)
   : AWindow("Project template app", 300_dp, 200_dp), mUpdater(std::move(updater)) {
     setContents(Centered { Vertical {
-      Centered { Icon { ":img/icon.svg" } with_style { FixedSize(64_dp) } },
+      Centered { Icon { ":img/icon.svg" } AUI_WITH_STYLE { FixedSize(64_dp) } },
       Centered { Label { "Hello world from AUI!" } },
       _new<AButton>("Visit GitHub repo")
           .connect(&AView::clicked, this, [] { APlatform::openUrl("https://github.com/aui-framework/aui"); }),
@@ -22,7 +22,7 @@ MainWindow::MainWindow(_<MyUpdater> updater)
               &AView::clicked, this, [] { APlatform::openUrl("https://github.com/aui-framework/aui/issues/new"); }),
       CustomLayout {} & mUpdater->status.readProjected([&updater = mUpdater](const std::any& status) -> _<AView> {
           if (std::any_cast<AUpdater::StatusIdle>(&status)) {
-              return _new<AButton>("Check for updates").connect(&AView::clicked, slot(updater)::checkForUpdates);
+              return _new<AButton>("Check for updates").connect(&AView::clicked, AUI_SLOT(updater)::checkForUpdates);
           }
           if (std::any_cast<AUpdater::StatusCheckingForUpdates>(&status)) {
               return Label { "Checking for updates..." };
@@ -35,7 +35,7 @@ MainWindow::MainWindow(_<MyUpdater> updater)
           }
           if (std::any_cast<AUpdater::StatusWaitingForApplyAndRestart>(&status)) {
               return _new<AButton>("Apply update and restart")
-                  .connect(&AView::clicked, slot(updater)::applyUpdateAndRestart);
+                  .connect(&AView::clicked, AUI_SLOT(updater)::applyUpdateAndRestart);
           }
           return nullptr;
       }),
