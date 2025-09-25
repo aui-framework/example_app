@@ -46,6 +46,10 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
+      - name: Install Windows dependencies
+        if: runner.os == 'Windows'
+        run: choco install innosetup
+
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
         run: |
@@ -70,18 +74,18 @@ jobs:
         run: brew install ninja
 
       - name: Configure CMake
-        run: cmake -G "${{ matrix.os=='windows-latest' && 'Visual Studio 17 2022' || 'Ninja' }}" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Debug ${{matrix.additional_cmake_flags}} -DAUI_INSTALL_RUNTIME_DEPENDENCIES=TRUE
+        run: cmake -G "${{ matrix.os=='windows-latest' && 'Visual Studio 17 2022' || 'Ninja' }}" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=RelWithDebInfo ${{matrix.additional_cmake_flags}} -DAUI_INSTALL_RUNTIME_DEPENDENCIES=TRUE
 
       - name: Build Project
-        run: cmake --build ${{github.workspace}}/build --config Debug
+        run: cmake --build ${{github.workspace}}/build --config RelWithDebInfo
 
       - name: Build Tests
-        run: cmake --build ${{github.workspace}}/build --config Debug --target Tests
+        run: cmake --build ${{github.workspace}}/build --config RelWithDebInfo --target Tests
 
       - name: Run Tests (Windows)
         if: runner.os == 'Windows'
-        working-directory: ${{github.workspace}}/build/bin/Debug/
-        run: ${{github.workspace}}/build/bin/Debug/Tests.exe
+        working-directory: ${{github.workspace}}/build/bin/RelWithDebInfo/
+        run: ${{github.workspace}}/build/bin/RelWithDebInfo/Tests.exe
 
       - name: Run Tests (Linux and macOS)
         if: runner.os == 'Linux'
@@ -93,32 +97,32 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: |
           cmake . -DAUI_APP_PACKAGING=INNOSETUP
-          cmake --build . --config Debug
-          cpack . -CDebug -B artifacts
+          cmake --build . --config RelWithDebInfo
+          cpack . -CRelWithDebInfo -B artifacts
 
       - name: Pack Windows Portable
         if: runner.os == 'Windows'
         working-directory: ${{github.workspace}}/build
         run: |
           cmake . -DAUI_APP_PACKAGING=AUI_PORTABLE_ZIP
-          cmake --build . --config Debug
-          cpack . -CDebug -B artifacts
+          cmake --build . --config RelWithDebInfo
+          cpack . -CRelWithDebInfo -B artifacts
 
       - name: Pack Linux Portable (ZIP)
         if: runner.os == 'Linux'
         working-directory: ${{github.workspace}}/build
         run: |
           cmake . -DAUI_APP_PACKAGING=AUI_PORTABLE_ZIP
-          cmake --build . --config Debug
-          cpack . -CDebug -B artifacts
+          cmake --build . --config RelWithDebInfo
+          cpack . -CRelWithDebInfo -B artifacts
 
       - name: Pack Linux Portable (tar.gz)
         if: runner.os == 'Linux'
         working-directory: ${{github.workspace}}/build
         run: |
           cmake . -DAUI_APP_PACKAGING=AUI_PORTABLE_TGZ
-          cmake --build . --config Debug
-          cpack . -CDebug -B artifacts
+          cmake --build . --config RelWithDebInfo
+          cpack . -CRelWithDebInfo -B artifacts
 
       - name: Upload
         uses: actions/upload-artifact@v4
