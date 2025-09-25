@@ -46,6 +46,10 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
+      - name: Install Windows dependencies
+        if: runner.os == 'Windows'
+        run: choco install innosetup
+
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
         run: |
