@@ -112,7 +112,6 @@ jobs:
           cpack . -CRelWithDebInfo -B artifacts
 
       - name: Pack Portable
-        if: runner.os == 'Windows'
         working-directory: ${{github.workspace}}/build
         run: |
           cmake . -DAUI_APP_PACKAGING=${{ runner.os == 'Linux' && 'AUI_PORTABLE_TGZ' || 'AUI_PORTABLE_ZIP' }}
