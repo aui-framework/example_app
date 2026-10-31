@@ -9,22 +9,24 @@ Follow the steps in order. A UI change is not done until you have seen it work i
 
 ## 1. Locate aui-remote
 
-Configure a Debug build if there is none, then ask AUI.Boot for the tool. Use the build directory the user has, if it
-is not `build`:
+Configure a Debug build if there is none. Use the build directory the user has, if it is not `build`:
 
 ```bash
 cmake -B build -DCMAKE_BUILD_TYPE=Debug
-cmake -P aui.boot.cmake remote build
 ```
 
-The command prints the path to `aui-remote`, nothing else. If it fails instead:
+On configure, AUI.Boot writes `build/package-lock.json`: what every dependency resolved to, with its `version`,
+`source_dir`, `pin` and `as_subdirectory`, and `install_dir` for an installed package. Read it instead of guessing paths
+under `~/.aui`. It is also the way to AUI's own sources (`source_dir`) when you need to check an API.
 
-- `aui-remote is not built yet`: AUI is pulled with `-DAUIB_AUI_AS=TRUE`, so `aui-remote` is a target of this build.
-  Run `cmake --build build --parallel 8 -t aui.remote` and repeat the command.
-- `aui-remote is not found`: the distribution has no `aui-remote` because `AUI_VERSION` is too old. Tell the user. Do
-  not change `AUI_VERSION` on your own.
+Read the `aui` entry:
 
-Below, `aui-remote` stands for the printed path. Write the full path out in every command.
+- `as_subdirectory` is `false`: AUI is a distribution, the tool is `<install_dir>/bin/aui-remote`. If there is no such
+  file, `AUI_VERSION` is too old to have it. Tell the user. Do not change `AUI_VERSION` on your own.
+- `as_subdirectory` is `true`: AUI is pulled with `-DAUIB_AUI_AS=TRUE`, so `aui-remote` is a target of this build. Run
+  `cmake --build build --parallel 8 -t aui.remote`; the tool is `build/bin/aui-remote`.
+
+Below, `aui-remote` stands for that path. Write the full path out in every command.
 
 ## 2. Ask for permission to add remote debugging
 
