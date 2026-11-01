@@ -119,9 +119,57 @@ Exercise the change the way a user would, and look at the PNG before and after: 
 changes after clicking, not when the button exists. If it is wrong, fix the code, rebuild, `stop`, `launch` and check
 again. In your report, say what you clicked and what the screenshot showed.
 
+Run the application with the arguments and the configuration the user runs it with. If they say "it works here" and it
+does not work for you, compare those first. An application may keep state between runs, such as a signed-in account,
+settings or a server to connect to: it is the user's real data. Ask before you delete it or before an action you can't
+take back, and check which environment the application connected to before you go on.
+
+## 6. Applications that draw their own content
+
+An OpenGL canvas, a game or a video has one view in `tree`, `find` and `--annotate`, whatever it shows. It may also
+produce frames all the time, and then `wait-idle` always ends with a timeout. For such content:
+
+- Find what you are clicking by coordinates. Set a fixed window size with `resize` first and keep the coordinates in
+  one place; they are only valid for that size.
+- Wait for a line in the log, not for a pause. `launch` prints the paths of `stdout` and `stderr`.
+- Look at the screen before you click a fixed point. A popup that opens only sometimes turns a blind click into a click
+  on whatever is under it.
+- Ask the application instead of guessing from pixels. `ARemoteDebug::start()->registerFunction` exposes a function of
+  your own under `#if AUI_DEBUG`, `functions` lists them and `call` runs them. A function that reports the state under a
+  point or switches a feature at runtime answers in one call what screenshots do not answer at all.
+
+## 7. Spending less
+
+- Learn the state from the log. Take a screenshot only for what is visible to the eye alone.
+- Crop or scale a screenshot before reading it: `--ref` crops to a view, and a smaller image is enough to see which
+  screen is open. Use the full size for small details only.
+- `logs` returns JSON with every line. For a long session, filter the `stdout` file with `grep` instead.
+- When the same steps are needed more than twice, such as getting past a sign-in or a loading screen, put them into a
+  script that ends with the result. One call is cheaper than a screenshot after each click, and a script does not forget
+  a step.
+
+## 8. Bugs that come and go
+
+Rendering and loading depend on the order of asynchronous work, so a single run proves nothing.
+
+- Do not write "fixed", "one-off" or "unrelated" until you have repeated the run. Compare how often the bug shows up in
+  the same conditions before and after the change, and keep the counts: build, arguments, result.
+- Prefer a loop that checks the result by itself. Run the check on known good and bad images first: `compare` gives the
+  percentage of different pixels. If the check fails, the loop must stop, not continue without an answer.
+- A bug that depends on order can often be forced: expose the order through `registerFunction` and shuffle it within one
+  run. That is faster than restarting and gives a reproduction instead of a chance of one.
+- Add diagnostics before you guess further. Log the state at the moment of failure, and for OpenGL read `glGetError`
+  right after the call you suspect: when one thing renders wrong, the cause may be an earlier call that changed the state.
+- If the user reports that a small change made the bug go away, take it as data about the cause, not as a fix.
+- Before you stop an application with a reproduced bug, take a full screenshot and decide whether you still need it alive.
+- The window gets no frames while the display is off, so the application looks hung and `screenshot` fails. Check that
+  first. On macOS, `caffeinate -d -w <pid>` keeps the display on while the application runs. It can't wake a display that
+  is already off: ask the user.
+
 ## Rules
 
-- Always `wait-idle` after input, then `screenshot`. Otherwise you see the frame before the change.
+- Always `wait-idle` after input, then `screenshot`. Otherwise you see the frame before the change. The exception is
+  content that never goes idle, see section 6.
 - Every command prints one JSON object on the last line. On failure read `error.data.hint`.
 - Refs (`v<gen>:<id>`) go stale when the tree changes. On `STALE_REF`, run `find` again.
 - Check `logs --level warn` when something does not react.
